@@ -7,12 +7,24 @@ import { useLoadScript } from '@react-google-maps/api';
 import { IonPage, IonContent, IonButton, IonAlert } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import customMapStyle from './MapStyle';
+import subterminalImage from "../../assets/imgs/sub.png";
+import loadZoneImage from "../../assets/imgs/load.png";
+import jeepImage from "../../assets/imgs/jeep.png";
+import tricycleImage from "../../assets/imgs/tricycle.png";
+
+import currentImage from "../../assets/imgs/current.png";
+import destinationImage from "../../assets/imgs/destination.png";
+import settingsImage from "../../assets/imgs/settings.png";
 
 interface TerminalData {
+  tag: string,
+  id: string,
   name: string;
-  latitude: number;
-  longitude: number;
-  address: string;
+  latitude: number,
+  longitude: number,
+  address: string,
+  starting?: string,
+  ending?: string,
 }
 
 const containerStyle = {
@@ -37,38 +49,109 @@ const MapPage: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
+    console.log("Dito ***********");
     const fetchData = async () => {
       try {
         const firebaseConfig = {
           apiKey: "AIzaSyDb16--NNWhB_ZRC-NL8WmfMeGJwKr-6ms",
           authDomain: "dropoff-table.firebaseapp.com",
-          databaseURL: "https://dropoff-table-default-rtdb.firebaseio.com",
+          databaseURL: "https://dropoff-table-default-rtdb.firebaseio.com/",
           projectId: "dropoff-table",
           storageBucket: "dropoff-table.appspot.com",
           messagingSenderId: "60054294451",
-          appId: "1:60054294451:web:91f77c26a9115462dc05c6",
+          appId: "1:60054294451:web:91f77c26a9115462dc05c6"
         };
 
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
+        const mapApp = firebase.initializeApp(firebaseConfig, 'mapDB');
+        const database = mapApp.database();
 
-        const database = firebase.database();
-        const ref = database.ref('terminals');
+        const jodaterminalRef = database.ref('jodaterminal'); 
+        const loadZonesRef = database.ref('loadZones'); 
+        const subsubterminalRef = database.ref('subsubterminals'); 
+        const terminalRef = database.ref('terminals'); 
 
-        ref.on('value', (snapshot) => {
+        const updateMarkers = (newData: TerminalData[]) => {
+          setMarkers(prevMarkers => [...prevMarkers, ...newData]);
+        };
+        
+
+        jodaterminalRef.on('value', (snapshot) => {
           const data: TerminalData[] = [];
           snapshot.forEach((childSnapshot) => {
             const childData = childSnapshot.val();
             const terminal: TerminalData = {
-              name: childData.name,
-              latitude: childData.latitude,
-              longitude: childData.longitude,
+              tag: "joda",
+              id: childData.joda_ID,
+              starting: childData.starting,
+              ending: childData.ending,
+
+              name: childData.joda_Name,
+              latitude: parseFloat(childData.latitude),
+              longitude: parseFloat(childData.longitude),
               address: childData.address,
             };
             data.push(terminal);
           });
-          setMarkers(data);
+          console.log(data);
+          updateMarkers(data);
+        });
+        loadZonesRef.on('value', (snapshot) => {
+          const data: TerminalData[] = [];
+          snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.val();
+            const terminal: TerminalData = {
+              tag: "loadZones",
+              id: childData.load_ID,
+
+              name: childData.load_Name,
+              latitude: parseFloat(childData.latitude),
+              longitude: parseFloat(childData.longitude),
+              address: childData.address,
+            };
+            data.push(terminal);
+          });
+          console.log(data);
+          updateMarkers(data);
+        });
+        subsubterminalRef.on('value', (snapshot) => {
+          const data: TerminalData[] = [];
+          snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.val();
+            const terminal: TerminalData = {
+              tag: "subsubterminal",
+              id: childData.toda_ID,
+              starting: childData.starting,
+              ending: childData.ending,
+
+              name: childData.toda_Name,
+              latitude: parseFloat(childData.latitude),
+              longitude: parseFloat(childData.longitude),
+              address: childData.address,
+            };
+            data.push(terminal);
+          });
+          console.log(data);
+          updateMarkers(data);
+        });
+        terminalRef.on('value', (snapshot) => {
+          const data: TerminalData[] = [];
+          snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.val();
+            const terminal: TerminalData = {
+              tag: "terminal",
+              id: childData.toda_ID,
+              starting: childData.starting,
+              ending: childData.ending,
+
+              name: childData.toda_Name,
+              latitude: parseFloat(childData.latitude),
+              longitude: parseFloat(childData.longitude),
+              address: childData.address,
+            };
+            data.push(terminal);
+          });
+          console.log(data);
+          updateMarkers(data);
         });
 
         const position = await getCurrentPosition();
@@ -198,13 +281,13 @@ const MapPage: React.FC = () => {
     title={marker.name}
     onClick={() => setSelectedMarker(marker)}
     icon={{
-      url: marker.name.includes('Subterminal')
-        ? '/src/assets/imgs/sub.png'
-        : marker.name.includes('Loading')
-        ? '/src/assets/imgs/load.png'
-        : marker.name.includes('JODA')
-        ? '/src/assets/imgs/jeep.png'
-        : '/src/assets/imgs/tricycle.png',
+      url: marker.tag?.includes('subsubterminal')
+        ? subterminalImage
+        : marker.tag?.includes('loadZones')
+        ? loadZoneImage
+        : marker.tag?.includes('joda')
+        ? jeepImage
+        : tricycleImage,
       scaledSize: new window.google.maps.Size(40, 40),
     }}
   />
@@ -222,18 +305,18 @@ const MapPage: React.FC = () => {
 )}
 <Marker
   position={currentLocation}
-  icon={{ url: '/src/assets/imgs/current.png' }}
+  icon={{ url: currentImage }}
 />
 <Marker
   position={destination}
-  icon={{ url: '/src/assets/imgs/destination.png' }}
+  icon={{ url: destinationImage }}
 />
 {directions && <DirectionsRenderer directions={directions} />}
 <TrafficLayer />
 </GoogleMap>
 <div className="settings-button-container">
   <div className="settings-button" onClick={handleSettingsClick}>
-    <img src={'/src/assets/imgs/settings.png'} alt="Settings" />
+    <img src={settingsImage} alt="Settings" />
   </div>
 </div>
 <div className="search-box-container">

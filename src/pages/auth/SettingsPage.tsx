@@ -6,6 +6,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/auth';
 import './SettingsPage.css'; // Import the CSS file
+import userImage from "../../assets/imgs/user.png";
 
 const SettingsPage: React.FC = () => {
   const history = useHistory();
@@ -58,7 +59,7 @@ const SettingsPage: React.FC = () => {
           <IonRouterLink routerLink="/profile" className="profile-item">
             <IonItem lines="none">
               <IonAvatar slot="start">
-                <img src="src/assets/imgs/user.png" alt="Profile" />
+                <img src={userImage} alt="Profile" />
               </IonAvatar>
               <IonLabel>
                 <h2>User Name</h2>

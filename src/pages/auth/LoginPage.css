@@ -55,6 +55,6 @@ ion-input[type="password"] {
 }
 
 ion-button {
-  --highlight-color: #your-color; /* Change the color here */
+  --highlight-color: blue; /* Change the color here */
   margin-left: 9%; /* Center the input */
 }

@@ -5,6 +5,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import './LoginPage.css';
+import logoImage from "../../assets/logo.png";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -49,7 +50,7 @@ const LoginPage: React.FC = () => {
   return (
     <IonContent>
       <div className="logo-container">
-        <img src="src/assets/logo.png" alt="Logo" className="logo" /> {/* Add the logo image */}
+        <img src={logoImage} alt="Logo" className="logo" /> {/* Add the logo image */}
       </div>
       <form onSubmit={handleLogin}>
         <IonInput

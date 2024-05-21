@@ -4,6 +4,7 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import './HomePage.css';
+import logoImage from "../assets/logo.png"
 
 const HomePage: React.FC = () => {
   const history = useHistory();
@@ -22,7 +23,7 @@ const HomePage: React.FC = () => {
     <IonPage>
       <IonContent className="ion-padding ion-content"> {/* Add ion-content class */}
       <div className="logo-container">
-        <img src="src/assets/logo.png" alt="Logo" className="logo" /> {/* Add the logo image */}
+        <img src={logoImage} alt="Logo" className="logo" /> {/* Add the logo image */}
       </div>
         <h1>Welcome to VCC</h1>
         <p>Please login or register to continue.</p>

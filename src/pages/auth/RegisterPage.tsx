@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import './RegisterPage.css';
+import logoImage from "../../assets/logo.png";
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ const RegisterPage: React.FC = () => {
     <IonPage>
       <IonContent className="ion-padding">
         <div className="logo-container">
-          <img src="src/assets/logo.png" alt="Logo" className="logo" /> {/* Add the logo image */}
+          <img src={logoImage} alt="Logo" className="logo" /> {/* Add the logo image */}
         </div>
         <div className="register-form">
           <IonInput 
