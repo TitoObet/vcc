@@ -67,14 +67,14 @@ const LoginPage: React.FC = () => {
             type="email"
             placeholder="Email"
             value={email}
-            onIonChange={(e) => setEmail(e.detail.value!)}
+            onIonInput={(e) => setEmail(e.detail.value!)}
             required
           />
           <IonInput
             type="password"
             placeholder="Password"
             value={password}
-            onIonChange={(e) => setPassword(e.detail.value!)}
+            onIonInput={(e) => setPassword(e.detail.value!)}
             required
           />
           <IonButton type="submit" disabled={isSubmitting}>
