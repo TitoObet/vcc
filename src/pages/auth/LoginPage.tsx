@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
-import { IonContent, IonInput, IonButton, IonText } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-import './LoginPage.css';
+import React, { useState } from "react";
+import {
+  IonContent,
+  IonInput,
+  IonButton,
+  IonText,
+  IonPage,
+} from "@ionic/react";
+import { useHistory } from "react-router-dom";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "./LoginPage.css";
 import logoImage from "../../assets/logo.png";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false); // For showing loading state
   const history = useHistory();
 
@@ -19,7 +25,7 @@ const LoginPage: React.FC = () => {
 
     // Check if both email and password are provided
     if (!email || !password) {
-      setError('Enter both email and password');
+      setError("Enter both email and password");
       return; // Exit early if fields are not filled
     }
 
@@ -27,10 +33,10 @@ const LoginPage: React.FC = () => {
 
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
-      history.push('/map'); // Redirect to map page after successful login
+      history.push("/map"); // Redirect to map page after successful login
     } catch (error: any) {
-      console.error('Login error:', error); // Log the full error object
-      setError('An error occurred while logging in. Please try again later.');
+      console.error("Login error:", error); // Log the full error object
+      setError("An error occurred while logging in. Please try again later.");
     } finally {
       setIsSubmitting(false); // Reset loading state after submission
     }
@@ -40,40 +46,45 @@ const LoginPage: React.FC = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
       await firebase.auth().signInWithPopup(provider);
-      history.push('/map'); // Redirect to map page after successful login
+      history.push("/map"); // Redirect to map page after successful login
     } catch (error: any) {
-      console.error('Google login error:', error); // Log the full error object
-      setError('An error occurred while logging in with Google. Please try again later.');
+      console.error("Google login error:", error); // Log the full error object
+      setError(
+        "An error occurred while logging in with Google. Please try again later."
+      );
     }
   };
 
   return (
-    <IonContent>
-      <div className="logo-container">
-        <img src={logoImage} alt="Logo" className="logo" /> {/* Add the logo image */}
-      </div>
-      <form onSubmit={handleLogin}>
-        <IonInput
-          type="email"
-          placeholder="Email"
-          value={email}
-          onIonChange={(e) => setEmail(e.detail.value!)}
-          required
-        />
-        <IonInput
-          type="password"
-          placeholder="Password"
-          value={password}
-          onIonChange={(e) => setPassword(e.detail.value!)}
-          required
-        />
-        <IonButton type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Logging In...' : 'Login'}
-        </IonButton>
-        <IonButton onClick={handleGoogleLogin}>Login with Google</IonButton>
-      </form>
-      {error && <IonText color="danger">{error}</IonText>}
-    </IonContent>
+    <IonPage>
+      <IonContent>
+        <div className="logo-container">
+          <img src={logoImage} alt="Logo" className="logo" />{" "}
+          {/* Add the logo image */}
+        </div>
+        <form onSubmit={handleLogin}>
+          <IonInput
+            type="email"
+            placeholder="Email"
+            value={email}
+            onIonChange={(e) => setEmail(e.detail.value!)}
+            required
+          />
+          <IonInput
+            type="password"
+            placeholder="Password"
+            value={password}
+            onIonChange={(e) => setPassword(e.detail.value!)}
+            required
+          />
+          <IonButton type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Logging In..." : "Login"}
+          </IonButton>
+          <IonButton onClick={handleGoogleLogin}>Login with Google</IonButton>
+        </form>
+        {error && <IonText color="danger">{error}</IonText>}
+      </IonContent>
+    </IonPage>
   );
 };
 
